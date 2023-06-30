@@ -23,6 +23,5 @@ obj/
 *.booproj
 *.svd
 *.pdb
-*.apk
 *.unitypackage
 *.old
