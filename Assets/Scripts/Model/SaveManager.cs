@@ -9,6 +9,7 @@ public interface ISaveManager
     float GetLerpEnemySpeed();
     void SetLerpEnemySpeed(float lerp);
 }
+
 public class SaveManager : ISaveManager
 {
     public float GetLerpEnemySpawnDelay()
@@ -33,5 +34,3 @@ public class SaveManager : ISaveManager
         PlayerPrefs.SetFloat("LerpEnemySpeed", lerp);
     }
 }
-
-

@@ -19,7 +19,7 @@ public interface ICalculateSpawnPositionData
 
 public class EnemyManager : MonoBehaviour, ICalculateSpawnPositionData
 {
-    [SerializeField] private EnemyItem enemyPrefab;
+    [SerializeField] private MovingEnemyItem movingEnemyPrefab;
     [SerializeField] private BombItem bombPrefab;
     [SerializeField] private Transform player;
     
@@ -36,7 +36,7 @@ public class EnemyManager : MonoBehaviour, ICalculateSpawnPositionData
     public float MinDistanceForEnemyAndPlayer => minDistanceForEnemyAndPlayer;
     public float MinDistanceForEnemyAndEnemy => minDistanceForEnemyAndEnemy;
 
-    private List<IEnemyItem> listEnemies = new List<IEnemyItem>();
+    private List<IMovingEnemyItem> listMovingEnemies = new List<IMovingEnemyItem>();
     private List<IBombItem> listBombs = new List<IBombItem>();
     
     private float spawnerTime ;
@@ -44,7 +44,7 @@ public class EnemyManager : MonoBehaviour, ICalculateSpawnPositionData
     private float currentTime;
     private float currentSpeed;
     
-    private ICalculatorSpawnPosition calculatorSpawnPosition;
+    private ISpawnPositionCalculator spawnPositionCalculator;
 
    
     private void Start()
@@ -52,7 +52,7 @@ public class EnemyManager : MonoBehaviour, ICalculateSpawnPositionData
         isActive = true;
         CalculationMinExtremeSpawnDistance();
        
-        calculatorSpawnPosition = new CalculatorSpawnPosition(this);
+        spawnPositionCalculator = new SpawnPositionCalculator(this);
         SpawnBombs();
         SpawnEnemy();
     }
@@ -75,7 +75,7 @@ public class EnemyManager : MonoBehaviour, ICalculateSpawnPositionData
 
     private void CalculationMinExtremeSpawnDistance()
     {
-        MeshRenderer enemyMeshRenderer = enemyPrefab.GetComponent<MeshRenderer>();
+        MeshRenderer enemyMeshRenderer = movingEnemyPrefab.GetComponent<MeshRenderer>();
         if (enemyMeshRenderer == null)
         {
             Debug.LogError("Enemy item doesn`t have MeshRenderer");
@@ -94,32 +94,32 @@ public class EnemyManager : MonoBehaviour, ICalculateSpawnPositionData
         for (int j = 0; j < Constants.BombAmount; j++)
         {
             List<Vector3> allObjectsPositions = listBombs.Select(b => b.Position).ToList();
-            Vector3? position = calculatorSpawnPosition.CalculateSpawnPosition(player.position, bombPrefab.transform.position.y,allObjectsPositions);
-            if (position == null)
+            bool isSpawn =  spawnPositionCalculator.TrySpawnPositionCalculate(player.position, bombPrefab.transform.position.y,allObjectsPositions, out Vector3 spawnPosition);
+            if (isSpawn == null)
             {
                 Debug.Log("There is no new place to create a bomb.");
                 return;
             }
             BombItem bomb = Instantiate(bombPrefab);
-            bomb.transform.position = (Vector3)position;
+            bomb.transform.position = spawnPosition;
             listBombs.Add(bomb);
         }
     }
 
     private void SpawnEnemy()
     {
-        List<Vector3> allObjectsPositions = listEnemies.Select(e => e.Position).ToList();
-        Vector3? position = calculatorSpawnPosition.CalculateSpawnPosition(player.position, enemyPrefab.transform.position.y,allObjectsPositions);
-        if (position == null)
+        List<Vector3> allObjectsPositions = listMovingEnemies.Select(e => e.Position).ToList();
+        bool isSpawn = spawnPositionCalculator.TrySpawnPositionCalculate(player.position, movingEnemyPrefab.transform.position.y,allObjectsPositions, out Vector3 spawnPosition);
+        if (!isSpawn )
         {
             Debug.Log("There is no new place to create an enemy. Try again later");
             return;
         }
-        EnemyItem enemy = Instantiate(enemyPrefab, transform, false);
-        enemy.transform.position = (Vector3)position;
-        enemy.SetTarget(player);
-        enemy.SetSpeed(currentSpeed);
-        listEnemies.Add(enemy);
+        MovingEnemyItem movingEnemy = Instantiate(movingEnemyPrefab, transform, false);
+        movingEnemy.transform.position = spawnPosition;
+        movingEnemy.SetTarget(player);
+        movingEnemy.SetSpeed(currentSpeed);
+        listMovingEnemies.Add(movingEnemy);
     }
 
    
@@ -131,14 +131,14 @@ public class EnemyManager : MonoBehaviour, ICalculateSpawnPositionData
 
      public void StopMoveEnemies()
      {
-        listEnemies.ForEach(e=>e.StopMove());
+        listMovingEnemies.ForEach(e=>e.StopMove());
      }
 
     
 
      public float ChangeSpawnDelayByLerp(float lerp)
      {
-         spawnerTime = spawnerTime = Constants.EnemyMaxSpawnDelay -
+         spawnerTime =  Constants.EnemyMaxSpawnDelay -
                                      (Constants.EnemyMaxSpawnDelay - Constants.EnemyMinSpawnDelay) * lerp;
          return spawnerTime;
      }
@@ -146,25 +146,25 @@ public class EnemyManager : MonoBehaviour, ICalculateSpawnPositionData
      public float ChangeSpeedByLerp(float lerpSeed)
      {
          currentSpeed = (Constants.EnemyMaxSpeed - Constants.EnemyMinSpeed) * lerpSeed + Constants.EnemyMinSpeed;
-         listEnemies.ForEach(e=>e.SetSpeed(currentSpeed));
+         listMovingEnemies.ForEach(e=>e.SetSpeed(currentSpeed));
          return currentSpeed;
      }
 
-     public void Reset()
+     public void Restart()
      {
-         ResetBombs();
-         ResetEnemies();
+         RestartBombs();
+         RestartEnemies();
          isActive = true;
      }
 
-     private void ResetEnemies()
+     private void RestartEnemies()
      {
-         listEnemies.ForEach(e => e.Destroy());
-         listEnemies.Clear();
+         listMovingEnemies.ForEach(e => e.Destroy());
+         listMovingEnemies.Clear();
          SpawnEnemy();
      }
 
-     private void ResetBombs()
+     private void RestartBombs()
      {
          listBombs.ForEach(b => b.Destroy());
          listBombs.Clear();

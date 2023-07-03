@@ -7,12 +7,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-   [SerializeField] private Rigidbody myRB;
+    [SerializeField] private Rigidbody myRB;
 
-   public event Action<Vector3> IsCollisionWithEnemy;
-   public event Action<Vector3> IsCollisionWithBomb;
-    private float speedIndex=1.5f;
-    private bool isCollision;
+    public event Action<Vector3> CollidedWithEnemy;
+    public event Action<Vector3> CollidedWithBomb;
+    private float speedMultiplayer = 1.5f;
+    private bool alreadyCollider;
     private Vector3 startPosition;
 
     public void Start()
@@ -22,40 +22,50 @@ public class Player : MonoBehaviour
 
     public void SetVelocity(Vector2 delta)
     {
-        myRB.velocity = new Vector3(delta.x*speedIndex,0,delta.y*speedIndex);
+        myRB.velocity = new Vector3(delta.x * speedMultiplayer, 0, delta.y * speedMultiplayer);
     }
 
 
     private void OnCollisionEnter(Collision other)
     {
-        if(!isCollision)
+        if (!alreadyCollider)
         {
             if (other.transform.tag == "Enemy")
             {
-                isCollision = true;
-                SetVelocity(Vector2.zero);
-                IsCollisionWithEnemy?.Invoke(other.contacts[0].point);
-                myRB.isKinematic = true;
+                CollisionWithEnemy(other);
             }
 
             if (other.transform.tag == "Bomb")
             {
-                isCollision = true;
-                Vector3 normalized = ( transform.position-other.contacts[0].point).normalized;
-                myRB.constraints = RigidbodyConstraints.None;
-                myRB.AddTorque(new Vector3(100,100,100));
-                myRB.AddForce(normalized*30,ForceMode.Impulse);
-                IsCollisionWithBomb?.Invoke(other.contacts[0].point);
-                BombItem bombItem = other.collider.GetComponent<BombItem>();
-                if (bombItem == null)
-                {
-                    Debug.Log("It isn`t a bomb");
-                    return;
-                }
-
-                bombItem.ChangeDarkMaterial();
+                CollisionWithBomb(other);
             }
         }
+    }
+
+    private void CollisionWithEnemy(Collision other)
+    {
+        alreadyCollider = true;
+        SetVelocity(Vector2.zero);
+        CollidedWithEnemy?.Invoke(other.contacts[0].point);
+        myRB.isKinematic = true;
+    }
+
+    private void CollisionWithBomb(Collision other)
+    {
+        alreadyCollider = true;
+        Vector3 normalized = (transform.position - other.contacts[0].point).normalized;
+        myRB.constraints = RigidbodyConstraints.None;
+        myRB.AddTorque(new Vector3(100, 100, 100));
+        myRB.AddForce(normalized * 30, ForceMode.Impulse);
+        CollidedWithBomb?.Invoke(other.contacts[0].point);
+        BombItem bombItem = other.collider.GetComponent<BombItem>();
+        if (bombItem == null)
+        {
+            Debug.Log("It isn`t a bomb");
+            return;
+        }
+
+        bombItem.ChangeDarkMaterial();
     }
 
     public void Reset()
@@ -65,6 +75,6 @@ public class Player : MonoBehaviour
         transform.rotation = Quaternion.identity;
         myRB.constraints = RigidbodyConstraints.FreezeRotation;
         SetVelocity(Vector2.zero);
-        isCollision = false;
+        alreadyCollider = false;
     }
 }

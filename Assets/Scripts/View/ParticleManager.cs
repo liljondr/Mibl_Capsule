@@ -11,20 +11,22 @@ public class ParticleManager : MonoBehaviour
 
     public void PlayCollisionParticle(Vector3 collisionPoint)
     {
-        if(!isParticle)
-        {
-            isParticle = true;
-             particle = Instantiate(collisionParticle);
-            particle.transform.position = collisionPoint;
-        }
+        CreateParticle(collisionParticle, collisionPoint);
     }
-    
+
+   
+
     public void PlayExplosionParticle(Vector3 collisionPoint)
     {
-        if(!isParticle)
+        CreateParticle(explosionParticle, collisionPoint);
+    }
+    
+    private void CreateParticle(GameObject spawnParticle, Vector3 collisionPoint)
+    {
+        if (!isParticle)
         {
             isParticle = true;
-            particle = Instantiate(explosionParticle);
+            particle = Instantiate(spawnParticle);
             particle.transform.position = collisionPoint;
         }
     }
@@ -34,7 +36,4 @@ public class ParticleManager : MonoBehaviour
         Destroy(particle);
         isParticle = false;
     }
-
-   
 }
-

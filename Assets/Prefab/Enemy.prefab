@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 2023793937567549443}
   - component: {fileID: 2023793937567549442}
   - component: {fileID: 2023793937567549441}
-  - component: {fileID: 5843061983309562156}
   - component: {fileID: 2023793937567549440}
   - component: {fileID: 3163522418760593241}
+  - component: {fileID: -5595107344274504875}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -86,19 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &5843061983309562156
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2023793937567549446}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99f554640cf91ec4d869c187f0ab7a71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0.01
 --- !u!65 &2023793937567549440
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -128,3 +115,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
+--- !u!114 &-5595107344274504875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023793937567549446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99f554640cf91ec4d869c187f0ab7a71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -2,24 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public interface IBombItem
 {
-   public Vector3 Position { get; }
-   void Destroy();
+    public Vector3 Position { get; }
+    void Destroy();
 }
-public class BombItem : MonoBehaviour,IBombItem
+
+public class BombItem : MonoBehaviour, IBombItem
 {
     [SerializeField] private Material blackMaterial;
     [SerializeField] private MeshRenderer myRender;
-    private object destroy;
     public Vector3 Position => transform.position;
 
-   
 
     public void Destroy()
- {
-     Destroy(gameObject);
- }
+    {
+        Destroy(gameObject);
+    }
 
 
     public void ChangeDarkMaterial()
@@ -27,5 +27,3 @@ public class BombItem : MonoBehaviour,IBombItem
         myRender.material = blackMaterial;
     }
 }
-
-

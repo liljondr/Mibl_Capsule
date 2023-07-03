@@ -13,16 +13,18 @@ public class UIManager : MonoBehaviour
     public event Action<float> OnChangeSpeed;
     public event Action<float> OnChangeSpawnDelay;
     public event Action OnPressReplayButton;
+
     /// <summary>
     ///Index  corrects the speed value. So that it does not acquire values less than 0.1
     /// </summary>
-    private float correctIndex = 100;
+    private float correctMultiplay = 100;
 
     private void Start()
     {
         lossPopup.gameObject.SetActive(false);
     }
 
+    #region button listening
     public void OpenLossPopup(TimeSpan gameTime)
     {
         lossPopup.gameObject.SetActive(true);
@@ -31,13 +33,14 @@ public class UIManager : MonoBehaviour
 
     public void OnChangeSpeedSlider(float value)
     {
-       OnChangeSpeed?.Invoke(value);
+        OnChangeSpeed?.Invoke(value);
     }
-    
+
     public void OnChangeSpawnDelaySlider(float value)
     {
         OnChangeSpawnDelay?.Invoke(value);
     }
+    #endregion
 
     public void SetSpawnDelayValue(float lerpSpawnDelay)
     {
@@ -51,14 +54,14 @@ public class UIManager : MonoBehaviour
 
     public void SetSpeedText(float speed)
     {
-        speedSlider.ChangeTextSpawnDelay(speed*correctIndex);
+        speedSlider.ChangeTextSpawnDelay(speed * correctMultiplay);
     }
 
     public void SetSpeedValue(float lerpSeed)
     {
         speedSlider.SetValue(lerpSeed);
     }
-    
+
     public void OnPressReplay()
     {
         lossPopup.gameObject.SetActive(false);

@@ -552,7 +552,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 114.25
+  m_fontSize: 101.5
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1002,7 +1002,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 162.75
+  m_fontSize: 150.9
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2511,7 +2511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf59dcda6894ef64fb747b6400ae2258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 5843061983309562156, guid: 7bf7b07605c0e5b4d9442b485dc81909, type: 3}
+  movingEnemyPrefab: {fileID: -5595107344274504875, guid: 7bf7b07605c0e5b4d9442b485dc81909, type: 3}
   bombPrefab: {fileID: 2407921333276649242, guid: 6790e85ea4a2ce34eaf8cdbe0cc93068, type: 3}
   player: {fileID: 1408056992}
   rightDownPoint: {fileID: 1329535225}
@@ -2704,7 +2704,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeText: {fileID: 180220074}
-  background: {fileID: 874623346}
 --- !u!95 &2122879085
 Animator:
   serializedVersion: 4
